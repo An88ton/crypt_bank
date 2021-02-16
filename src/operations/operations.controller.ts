@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from '../auth/user.entity';
@@ -27,17 +27,18 @@ export class OperationsController {
    }
 
    @Patch('/pay')
+   @UsePipes(ValidationPipe)
    pay(@GetUser() user: User, @Body() payDto: PayDto): Promise<Payment>{
         return this.operationsService.pay(user, payDto);
    }
 
    @Patch('/topup/:cardId')
-   topUp(@GetUser() user: User, @Param('cardId') cardId: number, @Body('amount') amount: number): Promise<number>{
+   topUp(@GetUser() user: User, @Param('cardId', ParseIntPipe) cardId: number, @Body('amount') amount: number): Promise<number>{
         return this.operationsService.topUpCard(user, cardId, amount);
    }
 
    @Delete('/:id')
-   deleteCard(@GetUser() user: User, @Param('id') id: number) {
+   deleteCard(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
         this.operationsService.deleteCard(user, id);
    }
 
