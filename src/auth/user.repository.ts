@@ -37,7 +37,6 @@ export class UserRepository extends Repository<User> {
     async validatePassword(loginUserDto: LoginUserDto): Promise<User> {
         const {numberOfPhone, password} = loginUserDto;
         const user = await this.findOne({where: {numberOfPhone}});
-        console.log('validating password UserRepository');
         if(user && await user.validatePassword(password)){
             return user;
         }else 
