@@ -23,14 +23,17 @@ export class AuthService {
 
     async loginUser(loginUserDto: LoginUserDto): Promise<SignInDto> {
         const user = await this.userRepository.validatePassword(loginUserDto);
-        const numberOfPhone = user.numberOfPhone;
-        delete user.password
-        delete user.numberOfPhone
-        delete user.salt;
 
-        if(!numberOfPhone) {
+        if(!user) {
             throw new UnauthorizedException('Wrong username or password');
         }
+        
+        const numberOfPhone = user.numberOfPhone;
+        delete user.password;
+        delete user.numberOfPhone;
+        delete user.salt;
+
+        
 
         const payload: JwtPayload = {numberOfPhone};
 

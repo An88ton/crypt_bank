@@ -28,7 +28,6 @@ export class User extends BaseEntity{
     cards: Card[];
 
     async validatePassword(password: string): Promise<boolean> {
-        console.log('validate password');
         const hash = await bcrypt.hash(password, this.salt);
 
         return hash === this.password;
